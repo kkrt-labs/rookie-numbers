@@ -8,7 +8,59 @@ meaningful AIR implementations.
 
 ## How to run
 
+### Setup
+
+- Make sure you have the correct toolchain installed.
+
+```bash
+rustup toolchain install nightly-2025-07-14
+```
+
+- Linter and formatter [trunk](https://trunk.io/)
+
+- Stwo submodule
+
+```bash
+git submodule update --init --recursive
+```
+
+- Check everything is working
+
+```bash
+cargo b -r
+trunk check --all
+```
+
+Note: `trunk check --all` generates as of today few warnings due to `stwo` crate:
+
+```text
+  ISSUES
+
+Cargo.lock:352:0
+ 352:0  high  `derivative` is unmaintained; consider      osv-scanner/RUSTSEC-2024-0388
+              using an alternative. Current version is
+              vulnerable: 2.2.0.
+ 689:0  high  'paste' - no longer maintained. Current     osv-scanner/RUSTSEC-2024-0436
+              version is vulnerable: 1.0.15.
+
+external/stwo/crates/constraint-framework/src/lib.rs:304:32
+ 304:32  medium  you are deriving `PartialEq` and    clippy
+                 can implement `Eq`                   /derive_partial_eq_without_eq
+
+external/stwo/crates/stwo/src/prover/backend/simd/grind.rs:137:17
+ 137:17  medium  unused variable: `prefixed_digest`  clippy/unused_variables
+
+Checked 133 files
+✖ 2 security issues
+✖ 2 lint issues
+```
+
 ### Theoretical maximum frequency benchmarks
+
+This benchmarks lets you estimate the theoretical maximum frequency of the prover on your machine based on the trace size.
+
+It fills a random trace of the given size and enforces no constraints.
+
 
 ```bash
 RUSTFLAGS="-C target-cpu=native" cargo bench --bench frequency

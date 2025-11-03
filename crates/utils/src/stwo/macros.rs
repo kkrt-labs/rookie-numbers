@@ -63,46 +63,47 @@ macro_rules! trace_columns {
         }
 
         // ---------- Owned version ----------
-        paste::paste! {
-            #[derive(Debug, Clone)]
-            #[allow(dead_code)]
-            pub struct [<$name Owned>]<T> {
-                $(pub $column: T),*
-            }
+        trace_columns!(@owned_impl $name, $($column),*);
+    };
 
-            #[allow(dead_code)]
-            impl<T> [<$name Owned>]<T> {
-                #[inline(always)]
-                pub fn from_eval<E>(eval: &mut E) -> Self
-                where
-                    E: stwo_constraint_framework::EvalAtRow<F = T>,
-                {
-                    Self {
-                        $(
-                            $column: eval.next_trace_mask(),
-                        )*
-                    }
-                }
+    (@owned_impl $name:ident, $($column:ident),*) => {
+        #[derive(Debug, Clone)]
+        #[allow(dead_code)]
+        pub struct ${concat($name, Owned)}<T> {
+            $(pub $column: T),*
+        }
 
-                pub fn from_ids<E>(eval: &mut E, suffix: Option<u32>) -> Self
-                where
-                    E: stwo_constraint_framework::EvalAtRow<F = T>,
-                {
-                    Self {
-                        $($column: eval.get_preprocessed_column(stwo_constraint_framework::preprocessed_columns::PreProcessedColumnId { id: match suffix {
-                            Some(suffix) => format!("{}_{}_{}", stringify!($name), stringify!($column), suffix.to_string()),
-                            None => format!("{}_{}", stringify!($name), stringify!($column)),
-                        } }),)*
-                    }
+        #[allow(dead_code)]
+        impl<T> ${concat($name, Owned)}<T> {
+            #[inline(always)]
+            pub fn from_eval<E>(eval: &mut E) -> Self
+            where
+                E: stwo_constraint_framework::EvalAtRow<F = T>,
+            {
+                Self {
+                    $(
+                        $column: eval.next_trace_mask(),
+                    )*
                 }
             }
 
-            #[allow(dead_code)]
-            impl [<$name Owned>]<()> {
-                pub const SIZE: usize = <[()]>::len(&[$(trace_columns!(@unit $column)),*]);
+            pub fn from_ids<E>(eval: &mut E, suffix: Option<u32>) -> Self
+            where
+                E: stwo_constraint_framework::EvalAtRow<F = T>,
+            {
+                Self {
+                    $($column: eval.get_preprocessed_column(stwo_constraint_framework::preprocessed_columns::PreProcessedColumnId { id: match suffix {
+                        Some(suffix) => format!("{}_{}_{}", stringify!($name), stringify!($column), suffix.to_string()),
+                        None => format!("{}_{}", stringify!($name), stringify!($column)),
+                    } }),)*
+                }
             }
         }
 
+        #[allow(dead_code)]
+        impl ${concat($name, Owned)}<()> {
+            pub const SIZE: usize = <[()]>::len(&[$(trace_columns!(@unit $column)),*]);
+        }
     };
 
     // helper
