@@ -18,10 +18,9 @@ use peak_alloc::PeakAlloc;
 #[global_allocator]
 static PEAK_ALLOC: PeakAlloc = PeakAlloc;
 
-#[cfg(all(not(target_env = "msvc"), not(feature = "peak-alloc")))]
+#[cfg(feature = "jemalloc")]
 use tikv_jemallocator::Jemalloc;
-
-#[cfg(all(not(target_env = "msvc"), not(feature = "peak-alloc")))]
+#[cfg(feature = "jemalloc")]
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
 
@@ -38,7 +37,7 @@ use stwo::{
     prover::{backend::simd::SimdBackend, poly::circle::PolyOps, prove, CommitmentSchemeProver},
 };
 use stwo_constraint_framework::TraceLocationAllocator;
-use tracing::{debug, span, Level};
+use tracing::{debug, info, span, Level};
 
 use crate::{
     components::{gen_interaction_trace, gen_trace},
@@ -156,21 +155,37 @@ pub fn prove_sha256(log_size: u32, config: PcsConfig) -> StarkProof<Blake2sMerkl
     proof.unwrap()
 }
 
+pub fn print_enabled_features() {
+    let features: Vec<&str> = vec![
+        #[cfg(feature = "parallel")]
+        "Stwo parallel",
+        #[cfg(not(feature = "parallel"))]
+        "Stwo non-parallel",
+        #[cfg(feature = "peak-alloc")]
+        "peak-alloc",
+        #[cfg(feature = "jemalloc")]
+        "jemalloc",
+    ];
+
+    if features.is_empty() {
+        info!("Features: (none)");
+    } else {
+        info!("Features: {}", features.join(", "));
+    }
+}
 #[cfg(test)]
 mod tests {
     use std::{env, time::Instant};
 
     use rayon::iter::{IntoParallelIterator, ParallelIterator};
-    use tracing::info;
 
     use super::*;
 
+    /// Print all enabled features
+
     #[test_log::test]
     fn test_prove_sha256() {
-        #[cfg(feature = "parallel")]
-        info!("Stwo Parallel");
-        #[cfg(not(feature = "parallel"))]
-        info!("Stwo Non-parallel");
+        print_enabled_features();
 
         // Get from environment variable:
         let log_n_instances = env::var("LOG_N_INSTANCES")

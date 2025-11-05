@@ -28,18 +28,18 @@ lint:
       run_timeout: 20m
   enabled:
     - black@25.9.0
-    - checkov@3.2.486
+    - checkov@3.2.489
     - isort@7.0.0
-    - ruff@0.14.1
+    - ruff@0.14.3
     - yamllint@1.37.1
     - clippy@SYSTEM
     - git-diff-check
     - markdownlint@0.45.0
-    - osv-scanner@2.2.3
+    - osv-scanner@2.2.4
     - prettier@3.6.2
     - rustfmt@SYSTEM
     - taplo@0.10.0
-    - trufflehog@3.90.11
+    - trufflehog@3.90.12
   ignore:
     - linters: [ALL]
       paths:

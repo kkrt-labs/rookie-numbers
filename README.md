@@ -31,7 +31,8 @@ cargo b -r
 trunk check --all
 ```
 
-Note: `trunk check --all` generates as of today few warnings due to `stwo` crate:
+Note: `trunk check --all` generates as of today few warnings due to `stwo`
+crate:
 
 ```text
   ISSUES
@@ -57,10 +58,10 @@ Checked 133 files
 
 ### Theoretical maximum frequency benchmarks
 
-This benchmarks lets you estimate the theoretical maximum frequency of the prover on your machine based on the trace size.
+This benchmarks lets you estimate the theoretical maximum frequency of the
+prover on your machine based on the trace size.
 
 It fills a random trace of the given size and enforces no constraints.
-
 
 ```bash
 RUSTFLAGS="-C target-cpu=native" cargo bench --bench frequency
@@ -73,14 +74,38 @@ Some results can also be found in
 
 #### Sha256
 
-To bench several configurations:
-
-```bash
-RUSTFLAGS="-C target-cpu=native" cargo bench --bench sha256
-```
-
 To run a single test:
 
 ```bash
 LOG_N_INSTANCES=17 N_ITER=3 RUSTFLAGS="-C target-cpu=native" cargo t -r test_prove_sha256
+```
+
+Depending on your machine (especially the number of cores and available memory),
+you may find OOM errors. It is a good idea to start low instance count and one
+single thread:
+
+```bash
+LOG_N_INSTANCES=13 N_ITER=1 RUSTFLAGS="-C target-cpu=native" cargo t -r test_prove_sha256
+```
+
+to check memory usage and performance, and then increase the number of
+iterations and log size. Best results should be obtained with `N_ITER` set to
+the actual number of cores on your machine. For example, on macOs
+
+```bash
+LOG_N_INSTANCES=13 N_ITER=$(sysctl -n hw.logicalcpu) RUSTFLAGS="-C target-cpu=native" cargo t -r test_prove_sha256
+```
+
+The global allocator can be changed by using the `peak-alloc` or `jemalloc`
+features:
+
+- `peak-alloc`: uses the [peak-alloc](https://crates.io/crates/peak-alloc) crate
+  to track the peak memory usage.
+- `jemalloc`: uses the [jemalloc](https://crates.io/crates/tikv-jemallocator)
+  allocator that seems to provide better performance.
+
+To bench several configurations:
+
+```bash
+RUSTFLAGS="-C target-cpu=native" cargo bench --bench sha256
 ```
