@@ -20,6 +20,7 @@ tikv-jemallocator = { workspace = true, optional = true }
 rayon.workspace = true
 sha2.workspace = true
 utils.workspace = true
+smalloc = { version = "6.0.1", path = "../../../smalloc-v6" }
 
 [dev-dependencies]
 divan.workspace = true
@@ -36,3 +37,4 @@ track-relations = []
 default = []
 peak-alloc = ["peak_alloc"]
 jemalloc = ["tikv-jemallocator"]
+smalloc = []

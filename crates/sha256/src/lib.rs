@@ -24,6 +24,12 @@ use tikv_jemallocator::Jemalloc;
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
 
+#[cfg(feature = "smalloc")]
+use smalloc::Smalloc;
+#[cfg(feature = "smalloc")]
+#[global_allocator]
+static GLOBAL: Smalloc = Smalloc::new();
+
 use num_traits::Zero;
 use stwo::{
     core::{
