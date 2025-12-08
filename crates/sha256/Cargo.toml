@@ -20,7 +20,9 @@ tikv-jemallocator = { workspace = true, optional = true }
 rayon.workspace = true
 sha2.workspace = true
 utils.workspace = true
-smalloc = { version = "6.0.1", path = "../../../smalloc-v6" }
+smalloc = { version = "7.0.1", git = "https://github.com/zooko/smalloc", optional = true }
+# smalloc = { version = "6.0.3", path = "../../../smalloc-6.0.3/smalloc", optional = true }
+ctor = { version = "0.2", optional = true }
 
 [dev-dependencies]
 divan.workspace = true
@@ -37,4 +39,4 @@ track-relations = []
 default = []
 peak-alloc = ["peak_alloc"]
 jemalloc = ["tikv-jemallocator"]
-smalloc = []
+smalloc = ["dep:smalloc", "ctor"]

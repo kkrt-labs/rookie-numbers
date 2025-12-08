@@ -5,6 +5,10 @@
     iter_array_chunks,
     macro_metavar_expr_concat
 )]
+
+#[cfg(feature = "smalloc")]
+mod smalloc_init;
+
 pub mod components;
 pub mod macros;
 pub mod partitions;
@@ -23,12 +27,6 @@ use tikv_jemallocator::Jemalloc;
 #[cfg(feature = "jemalloc")]
 #[global_allocator]
 static GLOBAL: Jemalloc = Jemalloc;
-
-#[cfg(feature = "smalloc")]
-use smalloc::Smalloc;
-#[cfg(feature = "smalloc")]
-#[global_allocator]
-static GLOBAL: Smalloc = Smalloc::new();
 
 use num_traits::Zero;
 use stwo::{

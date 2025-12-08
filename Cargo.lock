@@ -349,6 +349,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "ctor"
+version = "0.2.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32a2785755761f3ddc1492979ce1e48d2c00d09311c39e4466429188f3dd6501"
+dependencies = [
+ "quote",
+ "syn 2.0.108",
+]
+
+[[package]]
 name = "derivative"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -469,6 +479,12 @@ dependencies = [
  "libc",
  "windows-sys 0.61.2",
 ]
+
+[[package]]
+name = "fastrand"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37909eebbb50d72f9059c3b6d82c0463f2ff062c9e95845c43a6c9c0355411be"
 
 [[package]]
 name = "find-msvc-tools"
@@ -622,6 +638,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "34080505efa8e45a4b816c349525ebe327ceaa8559756f0356cba97ef3bf7432"
 
 [[package]]
+name = "mach-sys"
+version = "0.5.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "48460c2e82a3a0de197152fdf8d2c2d5e43adc501501553e439bf2156e6f87c7"
+dependencies = [
+ "fastrand",
+]
+
+[[package]]
 name = "matchers"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -702,6 +727,15 @@ name = "pin-project-lite"
 version = "0.2.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b3cff922bd51709b605d9ead9aa71031d81447142d828eb4a6eba76fe619f9b"
+
+[[package]]
+name = "plat"
+version = "7.0.1"
+source = "git+https://github.com/zooko/smalloc#12d20d6c7d6a774fcaf8d30553166aeebbda2e56"
+dependencies = [
+ "mach-sys",
+ "rustix",
+]
 
 [[package]]
 name = "ppv-lite86"
@@ -930,6 +964,7 @@ name = "sha256"
 version = "0.0.1"
 dependencies = [
  "bincode",
+ "ctor",
  "divan",
  "itertools 0.13.0",
  "num-traits",
@@ -963,6 +998,25 @@ name = "shlex"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
+
+[[package]]
+name = "smalloc"
+version = "7.0.1"
+source = "git+https://github.com/zooko/smalloc#12d20d6c7d6a774fcaf8d30553166aeebbda2e56"
+dependencies = [
+ "plat",
+ "smalloc-macros",
+]
+
+[[package]]
+name = "smalloc-macros"
+version = "0.1.0"
+source = "git+https://github.com/zooko/smalloc#12d20d6c7d6a774fcaf8d30553166aeebbda2e56"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.108",
+]
 
 [[package]]
 name = "smallvec"
